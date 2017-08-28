@@ -19,4 +19,6 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^recommend/', include('recommend.urls')),
+    #REDIRECT EVERYTHING TO RECOMMEND RIGHT NOW
+    url(r'^$', include('recommend.urls')),
 ]

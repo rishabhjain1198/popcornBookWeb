@@ -25,7 +25,7 @@ SECRET_KEY = '5itb7&8+gl7ni#0*kucapt(28^z!h-m-&mif!^e=*o3dlk+%gb'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['myenv2.cmeaixmgcm.us-west-2.elasticbeanstalk.com', '127.0.0.1',]
+ALLOWED_HOSTS=['*']
 
 # Application definition
 
@@ -47,6 +47,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'recommend.views.SimpleMiddleware',
 ]
 
 ROOT_URLCONF = 'ebdjango.urls'
