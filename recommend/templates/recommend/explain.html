@@ -1,0 +1,166 @@
+{% load static %}
+{% static "" as baseurl %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+
+    <title>PopcornBook</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ baseurl }}dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="{{ baseurl }}assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ baseurl }}cover.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="{{ baseurl }}assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <h3 class="masthead-brand"></h3>
+              <nav>
+                <ul class="nav masthead-nav">
+                  <li><a href="{% url 'index' %}">Home</a></li>
+                  <li class="active"><a href="{% url 'explain' %}">FAQs</a></li>
+
+                </ul>
+              </nav>
+            </div>
+          </div>
+<br><br><br><br>
+          <div class="inner cover">
+            <h1 class="cover-heading"></h1>
+            <p class="lead"></p>
+            <p class="lead">
+
+            <h2>How does this engine work?</h2>
+
+It works on the basis of, you guessed it, machine learning!
+
+
+
+About 17,000 synopses of English-language books were retrieved from Wikipedia and
+their metadata was matched with the (now deprecated) Freebase API. This data was fed to
+a Multinomial Naive Bayes model to learn about different styles of plot writing and progression.
+This data was then weighed for optimal training (more on that later).
+<br> <br>
+When you enter a movie, the server retrieves all the information about it from IMDB,
+and appropriately weighs this information (more on that later), and feeds it into the
+previously trained model to give a prediction about which book you would probably like
+if you enjoyed the inputted movie!
+
+<br>
+
+<h2>Why should I trust this engine?</h2>
+The engine has effectively read through thousands of books, and it also knows what
+happens in the movie you inputted (thanks to the plot synopsis and plot summary on IMDB), and out of
+the endless possibilities of text, it picked out that single book for you! There has to
+be something special about it which correlates to the style of the movie. Although the title
+of the book may seem unrelated, the contents are sure to be in accordance.
+
+
+
+<h2>I'm getting varying results for the same movie. Why is this?</h2>
+I'm constantly training the engine with more data on the backend, which might cause your
+results to change. Alternatively, this engine is presented on a Django server hosted on
+AWS, so it is possible that differently trained engines may be present on different instances of
+the AWS EC2 server, giving you different results if you're automatically redirected to a different
+instance (say, during auto-scaling, or redeployment).
+
+
+<h2>How was the training data cleaned to make sure predictions are awesome?</h2>
+After all the synopses were retrieved, natural language processing was performed on the
+data. I won't go into the details, but some of the steps used were:
+
+<ul style="text-align:left;">
+<li>Understanding context based on bigrams
+<li>Removing English stopwords which might cause unnecessary slowdown, and/or inaccuracy
+<li>Use stemming and speech tags to give more importance to certain words
+</ul>
+
+This same approach was applied to the data retrieved for a movie before being fed into the model.
+
+
+
+<h2>What does your model look like? What is it exactly?</h2>
+If you serialize the model, it comes out to be a 100 GB file! My computer definitely does
+not have enough RAM to train such a model, so I had to rent an AWS EC2 server to do the
+training. A lot of tricks were used to optimize memory usage, special thanks to <a href="https://blog.scrapinghub.com/2014/03/26/optimizing-memory-usage-of-scikit-learn-models-using-succinct-tries/">
+Mikhail Korobov who made a post about using Marisa-Trie wrapped vectorizers</a>,
+which helped me reduce RAM usage by about 65%.
+<br>
+Without going into too much detail about optimization, and PCA, the model is based on
+Term Frequency - Inverse Document Frequency Vectorizer with Multinomial Naive Bayes.
+This basically means that if a term occurs a lot across the ENTIRE dataset, then
+its weight is reduced since it isn't very valuable in uniquely identifying a book plot.
+It uses the approach of Bag of Words to store the data (I stored the vocabulary separately
+since Python dictionaries are extremely inefficient; read about Marisa-Trie above).
+
+
+
+
+<h2>I feel like a cheap AWS web server is not sufficient to calculate the optimum result...</h2>
+Good eye! Yes, good AWS servers are pretty expensive, (even on Spot pricing), so I have limited the
+number of books the engine bases its prediction on (just for the web interface). This is
+also a reason why you might get different results since the books might switch out during
+auto-scaling or deployment. However, rest assured, the training of the model was done on a
+much better computer, with the entire dataset.
+
+
+
+<h2>Are you going to release your code for free?</h2>
+Sure! Ofcourse! <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Here you go.</a>
+<br><br>
+
+In all honesty, I'll probably put the code on my <a href="https://github.com/rishabhjain1198/">GitHub</a> once I can't afford to keep the server up :P
+
+
+
+
+            </p>
+          </div>
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{ baseurl }}assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="{{ baseurl }}dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{{ baseurl }}assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>

@@ -1,3 +1,4 @@
+number_of_books_to_use = 500
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -9,7 +10,7 @@ from nltk.tokenize import word_tokenize, RegexpTokenizer
 from nltk.corpus import stopwords
 import requests
 from bs4 import BeautifulSoup
-
+import ast
 import os
 
 
@@ -20,7 +21,6 @@ books_path = os.path.join(module_dir, 'bookData.txt')
 
 
 #THIS IS USED TO LIMIT MEMORY USAGE AND PROVIDE SLIGHTLY DIFFERENTIATED RESULTS
-number_of_books_to_use = 1500
 #CHANGE THIS NUMBER TO A MAXIMUM OF 16000 TO USE A LARGER PORTION OF THE BOOK DATABASE
 
 myModel = MultinomialNB()
@@ -63,7 +63,6 @@ def predict(request):
 
     if not movieid.isdigit():
         movieid = '5472374'
-
 
 
     synourl = 'http://www.imdb.com/title/tt' + movieid + '/synopsis?ref_=tt_stry_pl'
@@ -135,10 +134,27 @@ def predict(request):
     
     finalbookresult = finalprediction
 
-    return HttpResponseRedirect(reverse('result', kwargs={'finalbookresult':finalbookresult}))
+    return HttpResponseRedirect(reverse('result', kwargs={'finalbookresult':finalbookresult, 'movieid' : movieid}))
 
-def result(request, finalbookresult):
-    context = {'finalbookdata':finalbookresult, }
+def result(request, finalbookresult, movieid):
+    mainht = requests.get('http://www.imdb.com/title/tt' + movieid + '/?ref_=ttmi_tt').text
+    mainht = mainht.split('itemprop="image"')[0]
+    movieposterurl = mainht.split('"')[len(mainht.split('"'))-2]
+    movietitle = mainht.split('"')[len(mainht.split('"'))-4] [:-7]
+    
+    finalbookresult = finalbookresult[2:-2]
+    bookresultpres = finalbookresult.split('\\t')
+    booktitle = bookresultpres[0]
+    bookauthor= bookresultpres[1]
+    bookpublishdate = bookresultpres[2]
+    
+    print(booktitle + movietitle + movieposterurl)
+    
+    googlesearchurl = 'http://www.google.com/search?q=' + booktitle + '+book'
+    if bookauthor:
+        googlesearchurl = googlesearchurl + '+' + bookauthor
+    
+    context = {'booktitle' : booktitle, 'bookauthor' : bookauthor, 'bookpublishdate' : bookpublishdate, 'movieposterurl' : movieposterurl, 'movietitle' : movietitle, 'googlesearchurl' : googlesearchurl}
     return render(request, 'recommend/result.html', context)
 
 class SimpleMiddleware(object):
@@ -206,3 +222,7 @@ class SimpleMiddleware(object):
     def __call__(self, request):
         response = self.get_response(request)
         return response
+
+def explain(request):
+    context = {}
+    return render(request, 'recommend/explain.html', context)

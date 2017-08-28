@@ -1,18 +1,94 @@
-<center>
-<h3>Welcome to PopcornBook!</h3>
-</center>
+{% load static %}
+{% static "" as baseurl %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+   
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    <title>PopcornBook</title>
 
-<center>
-<form action="{% url 'predict' %}" method="post">
+    <!-- Bootstrap core CSS -->
+    <link href="{{ baseurl }}dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="{{ baseurl }}assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ baseurl }}cover.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="{{ baseurl }}assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body style="background-color: #5275e0;">
+
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <h3 class="masthead-brand"></h3>
+              <nav>
+                <ul class="nav masthead-nav">
+                  <li class="active"><a href="{% url 'index' %}">Home</a></li>
+                  <li><a href="{% url 'explain' %}">FAQs</a></li>
+
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+          <div class="inner cover">
+            <h1 class="cover-heading">Welcome to PopcornBook!</h1>
+            <p class="lead">Enter the name of a movie with a plot style you liked, and this highly trained engine will recommend a book to you based on your preferences!</p>
+            <p class="lead">
+            <form action="{% url 'predict' %}" method="post">
 {% csrf_token %}
 <h4>
-<input type="text" name="moviename" value="" />
+<input type="text" name="moviename" value="" class="form-control" placeholder="Enter movie name here" />
 <br><br>
-<input type="submit" value="Show me what you got!" style="height:8%;text-align  : center;width       : auto;border      : 0px;padding-left:10px;padding-right:10px;font-size:1.4em" />
+<input class="btn btn-lg btn-default" type="submit" value="Show me what you got!"/>
 </h4>
 </form>
-</center>
 
+            </p>
+          </div>
 
+          <div class="mastfoot">
+            <div class="inner">
+              <p>Made by <a href="https://github.com/rishabhjain1198">Rishabh Jain</a><br>Computer Science Major, UCLA 2020</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="{{ baseurl }}assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="{{ baseurl }}dist/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{{ baseurl }}assets/js/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>
