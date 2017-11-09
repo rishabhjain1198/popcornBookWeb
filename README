@@ -1,0 +1,24 @@
+PopcornBook
+
+Solo Project by Rishabh Jain
+
+Check it out at http://popcornbook.net
+
+Most of the machine learning code is redacted, however you can see how the implementation of the engine works.
+
+HOW IT WORKS:
+
+I scraped plots of about 17,000 books from Wikipedia and stored it in a data file which can be found here. 
+
+Using NLTK, roots for different words were found and weights were allotted in a custom dictionary accordingly.
+
+Then, this data was fed into a Term Frequency Inverse Document Frequency vectorizer, which basically means that if a term occurs
+more frequently across books, its weight is reduced significantly. This greatly helps in uniquely identifying plot structures.
+This engine is then serialized and stored to reduce stress on the server and user wait time.
+
+When the user enters a movie name, the server fetches the plot data from IMDB and asks the vectorizer to generate a prediction 
+based on this data.
+
+
+
+If you decide to use my code, please make sure to cite it properly.
