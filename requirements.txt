@@ -5,7 +5,7 @@ chardet==3.0.4
 Django==1.11.4
 idna==2.6
 nltk==3.2.4
-numpy==1.13.1
+numpy==1.21.0
 scipy==0.19.1
 pytz==2017.2
 requests==2.18.4
